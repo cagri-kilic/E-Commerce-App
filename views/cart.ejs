@@ -1,0 +1,84 @@
+<%- include("./partials/header") %>
+<!-- body -->
+
+<body class="main-layout inner_page">
+  <!-- loader  -->
+  <div class="loader_bg">
+    <div class="loader"><img src="/images/loading.gif" alt="#" /></div>
+  </div>
+  <!-- end loader -->
+
+  <%- include("./partials/menu") %>
+  <!-- about -->
+  <% if(products.length == 0){ %>
+  <div class="titlepage text_align_center">
+    <h2>You have no items in your cart</h2>
+  </div>
+  <div class="col-md-12">
+    <div class="group_form">
+      <button class="send_btn" onClick="window.location.href = '/products';">BACK TO SHOPPING</button>
+    </div>
+  </div>
+  <% } else{%>
+  <div class="gallery">
+    <div class="container_with">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="titlepage text_align_center">
+            <h2>Our Cart</h2>
+          </div>
+        </div>
+      </div>
+      <div class="tz-gallery">
+        <div class="row">
+          <% for(product of products){ %>
+          <div class="col-lg-4 col-md-6 ma_bottom30">
+
+            <div class="lightbox">
+              <img src=<%= product[0].img  %> alt="productImage">
+              <div class="pose">
+                <h3 style="padding-top:10px; padding-bottom:10px;"><%= product[0].name  %> </h3>
+                <p style="padding-top:10px;">$<%= product[0].price %> </p>
+                <p style="padding-top:10px;">Quantity: <%= product[1] %> </p>
+                <form id="request" class="main_form" action="cart/delete" method="POST">
+                  <input type="hidden" value=<%= product[0]._id %> name="product_id" />
+                  <button class="btn_del" type="submit"><i class=" fa fa-trash" style="font-size:24px"></i></button>
+                </form>
+                <form id="request" class="main_form" action="cart/decrease" method="POST">
+                  <input type="hidden" value=<%= product[0]._id %> name="product_id" />
+                  <button class="btn_dec" type="submit" <% if(product[1]==1 ){ %> disabled <% } %>><i class="fa fa-minus" style="font-size:24px"></i></button>
+                </form>
+                <form id="request" class="main_form" action="cart/increase" method="POST">
+                  <input type="hidden" value=<%= product[0]._id %> name="product_id" />
+                  <button class="btn_inc" type="submit"><i class="fa fa-plus" style="font-size:24px"></i></button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+
+          <% } %>
+
+          <div class="col-md-12">
+            <div class="group_form">
+              <button class="send_btn" onClick="window.location.href = '/products';">BACK TO SHOPPING</button>
+              <% let sumPrice = 0; %>
+              <% products.forEach(product => { sumPrice += (product[1] * product[0].price) }); %>
+
+
+              <button class="send_btn" onclick="window.location.href = '/payment';" <% if(products.length < 1){ %> disabled <% } %>>PURCHASE</button>
+              <h2>TOTAL: <h2 style="color: red;">$<%= sumPrice %></h2>
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% } %>
+
+  <!-- gallery -->
+
+  <!-- end gallery -->
+  <!-- end about -->
+  <%- include("./partials/footer") %>
